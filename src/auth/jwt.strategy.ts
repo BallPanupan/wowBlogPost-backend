@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
@@ -10,11 +10,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: 'your_jwt_secret', // use a strong secret in production
+      secretOrKey: 'jwt_secret', 
     });
   }
 
   async validate(payload: JwtPayload) {
-    return { userId: payload.sub, username: payload.username };
+    const user = await this.authService.validateUser(payload.username);
+    if (!user) {
+      throw new BadRequestException();
+    }
+    return user;
   }
+  
 }

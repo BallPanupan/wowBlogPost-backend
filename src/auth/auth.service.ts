@@ -12,9 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string): Promise<User | null> {
-    return this.userModel.findOne({
-      $or: [{ username: username }, { email: username }],
-    }).exec();
+    return this.userModel.findOne({username: username}).exec();
   }
 
   async login(user: User) {
