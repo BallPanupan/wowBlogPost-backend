@@ -52,6 +52,14 @@ export class PostService {
     return result;
   }
 
+  async deletePostById(id: string): Promise<any> {
+    const deletedPost = await this.postModel.findByIdAndDelete(id).exec();
+    if (!deletedPost) {
+      throw new NotFoundException(`Post with ID "${id}" not found`);
+    }
+    return { message: 'Post deleted successfully', deletedPost };
+  }
+
   async getPostById(id: string): Promise<any> {
     try {
       const post = await this.postModel.findById(id).exec();

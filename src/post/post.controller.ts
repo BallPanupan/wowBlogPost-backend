@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { PostDto } from './dto/post.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PostService } from './post.service';
@@ -13,7 +13,6 @@ export class PostController {
   async createPost(@Req() req, @Body() body: PostDto): Promise<any> {
     try{
       const userId = req.user._id;
-      console.log('userId', userId)
       const createdPost = await this.postService.createPost({
         userId,
         ...body,
@@ -22,6 +21,13 @@ export class PostController {
     } catch {
       return { message: 'success'};
     }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deletePost(@Param('id') id: string): Promise<any> {
+    console.log('id', id)
+    return this.postService.deletePostById(id);
   }
 
   @Get()
