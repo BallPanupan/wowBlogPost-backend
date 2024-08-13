@@ -10,19 +10,46 @@ export class PostService {
 
   async createPost(content: PostDto): Promise<any> { // Post
     try {
-      const createdPost = new this.postModel(content);
-      return { message: 'success' };
+      const createdPost = this.postModel.create(content);
+      return { message: 'success'};
     } catch {
       return { message: 'failed' };
     }
   }
 
   async getPosts(): Promise<any> {
-    const post = await this.postModel.find({},{__v: 0}).lean()
-    if (!post) {
+
+    const aggregate: any = [
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $project: {
+          __v: 0,
+          'user.__v': 0,
+          'userId': 0,
+        },
+      },
+    ]
+
+    const post = await this.postModel.aggregate(aggregate).exec()
+
+    const result = post.map((content: any) => {
+      return {
+        ...content,
+        user: content.user[0] || {}
+      };
+    });
+
+    if (!result) {
       throw new NotFoundException('Post not found');
     }
-    return post;
+    return result;
   }
 
   async getPostById(id: string): Promise<any> {

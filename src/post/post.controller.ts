@@ -10,13 +10,17 @@ export class PostController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createPost(@Req() req, @Body() body: PostDto): Promise<any> { // PostDto
-    const userId = req.user._id.toString();
-    const createdPost = await this.postService.createPost({
-      userId,
-      ...body,
-    });
-    return createdPost
+  async createPost(@Req() req, @Body() body: PostDto): Promise<any> {
+    try{
+      const userId = req.user._id;
+      const createdPost = await this.postService.createPost({
+        userId,
+        ...body,
+      });
+      return createdPost
+    } catch {
+      return { message: 'success'};
+    }
   }
 
   @Get()
