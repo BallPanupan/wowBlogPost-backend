@@ -22,7 +22,7 @@ export class PostService {
     const aggregate: any = [
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(id)
+          _id: id ? new mongoose.Types.ObjectId(id) : {$exists: true}
         },
       },
       {

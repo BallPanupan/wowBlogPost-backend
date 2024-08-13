@@ -21,3 +21,12 @@ export const PostSchema = SchemaFactory.createForClass(Post);
 
 // Optional: Indexing fields for better performance
 PostSchema.index({ userId: 1, community: 1 });
+
+
+
+
+{
+  $match: {
+    _id: new mongoose.Types.ObjectId(id)
+  },
+},
