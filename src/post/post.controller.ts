@@ -13,6 +13,7 @@ export class PostController {
   async createPost(@Req() req, @Body() body: PostDto): Promise<any> {
     try{
       const userId = req.user._id;
+      console.log('userId', userId)
       const createdPost = await this.postService.createPost({
         userId,
         ...body,
