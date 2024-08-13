@@ -30,10 +30,17 @@ export class PostController {
 
   @Get()
   async getPosts(@Query('id') id: string): Promise<any> { 
-    console.log(id)
     const posts = await this.postService.getPosts(id);
     return posts
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/mypost')
+  async getMyPosts(@Req() req): Promise<any> { 
+    const userId = req.user._id;
+    return await this.postService.getMyPosts(userId);
+  }
+
 }
 
 

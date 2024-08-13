@@ -77,4 +77,44 @@ export class PostService {
     }
   }
 
+
+  async getMyPosts(id: any): Promise<any> {
+    const aggregate: any = [
+      {
+        $match: {
+          userId: id ? new mongoose.Types.ObjectId(id) : {$exists: true}
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'user',
+        },
+      },
+      {
+        $project: {
+          __v: 0,
+          'user.__v': 0,
+          'userId': 0,
+        },
+      },
+    ]
+
+    const post = await this.postModel.aggregate(aggregate).exec()
+
+    const result = post.map((content: any) => {
+      return {
+        ...content,
+        user: content.user[0] || {}
+      };
+    });
+
+    if (!result) {
+      throw new NotFoundException('Post not found');
+    }
+    return result;
+  }
+  
 }
