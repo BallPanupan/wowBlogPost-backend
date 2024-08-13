@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { PostDto } from './dto/post.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PostService } from './post.service';
-import { Request } from 'express';
 
 @Controller('post')
 export class PostController {
@@ -26,13 +25,13 @@ export class PostController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async deletePost(@Param('id') id: string): Promise<any> {
-    console.log('id', id)
     return this.postService.deletePostById(id);
   }
 
   @Get()
-  async getPosts(): Promise<any> { // PostDto
-    const posts = await this.postService.getPosts();
+  async getPosts(@Query('id') id: string): Promise<any> { 
+    console.log(id)
+    const posts = await this.postService.getPosts(id);
     return posts
   }
 }

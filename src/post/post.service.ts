@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Post, PostDocument } from 'src/schema/post.schema';
 import { PostDto } from './dto/post.dto';
 
@@ -17,9 +17,14 @@ export class PostService {
     }
   }
 
-  async getPosts(): Promise<any> {
+  async getPosts(id: any): Promise<any> {
 
     const aggregate: any = [
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id)
+        },
+      },
       {
         $lookup: {
           from: 'users',
