@@ -13,8 +13,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     PassportModule,
     JwtModule.register({
-      secret: 'jwt_secret', // use a strong secret in production
-      signOptions: { expiresIn: '60m' },
+      secret: 'jwt_secret',
+      signOptions: { expiresIn: '30d' },
     }),
   ],
   providers: [AuthService, JwtStrategy, JwtAuthGuard],
