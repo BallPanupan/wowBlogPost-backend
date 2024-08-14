@@ -25,7 +25,17 @@ Make sure you have the following installed on your machine:
 - MongoDB (v7 or later)
 
 ## libraries or dependencies
-- 
+- @nestjs/config: "^3.2.3",
+- @nestjs/core: "^10.0.0",
+- @nestjs/jwt: "^10.2.0",
+- @nestjs/mongoose: "^10.0.10",
+- @nestjs/passport: "^10.0.3",
+- class-transformer: "^0.5.1",
+- class-validator: "^0.14.1",
+- dotenv: "^16.4.5",
+- mongoose: "^8.5.2",
+- passport: "^0.7.0",
+- passport-jwt: "^4.0.1",
 
 ## Installation FontEnd with Nextjs
 
