@@ -117,4 +117,12 @@ export class PostService {
     return result;
   }
   
+  async updatePostById(id: string, updateData: any): Promise<any> {
+    const updatePost = await this.postModel.findByIdAndUpdate(id, { 
+      $set: updateData 
+    }).exec();
+    
+    return { message: 'Post update successfully', updatePost };
+  }
+
 }
