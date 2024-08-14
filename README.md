@@ -54,7 +54,7 @@ MONGODB_URI=
 ```
 
 ### 3. Install database or restore
-  - create new docker container (version: 7)
+  - create new docker container for mongoDB (version: 7)
   - mongorestore, I have attached the database backup file, file name: `wowBlogPost-db.tar`
 
 ```
