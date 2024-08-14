@@ -47,6 +47,21 @@ export class PostController {
     return this.postService.updatePostById(id, body);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('newComment')
+  async createComment(
+    @Query('id') postId: string,
+    @Body('comment') comment: string,
+    @Req() req: any,
+  ): Promise<any> {
+    try{
+      const userId = req.user.id; // Assuming `id` is stored in the JWT payload
+      return this.postService.addComment(postId, userId, comment);
+    } catch {
+      return { message: 'success'};
+    }
+  }
+
 }
 
 

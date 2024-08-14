@@ -2,11 +2,16 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Post, PostDocument } from 'src/schema/post.schema';
+import { Comment, CommentDocument } from 'src/schema/comment.schema';
 import { PostDto } from './dto/post.dto';
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) { }
+  constructor(
+    @InjectModel(Post.name) private readonly postModel: Model<PostDocument>,
+    @InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>,
+  ) {}
+
 
   async createPost(content: PostDto): Promise<any> { // Post
     try {
@@ -124,5 +129,16 @@ export class PostService {
     
     return { message: 'Post update successfully', updatePost };
   }
+
+  async addComment(postId: string, userId: string, commentText: string): Promise<Comment> {
+    const prepareComment = {
+      postId: new mongoose.Types.ObjectId(postId),
+      userId: new mongoose.Types.ObjectId(userId),
+      comment: commentText,
+    }
+    const createdComment = await this.commentModel.create(prepareComment);
+    return createdComment;
+  }
+
 
 }
