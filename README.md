@@ -37,7 +37,7 @@ Make sure you have the following installed on your machine:
 - passport: "^0.7.0",
 - passport-jwt: "^4.0.1",
 
-## Installation FontEnd with Nextjs
+## Installation BackEnd with NestJS
 
 ### 1. Clone the repository
 
