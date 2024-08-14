@@ -13,7 +13,7 @@ export class PostService {
   ) {}
 
 
-  async createPost(content: PostDto): Promise<any> { // Post
+  async createPost(content: PostDto): Promise<any> { 
     try {
       const createdPost = this.postModel.create(content);
       return { message: 'success'};
@@ -78,6 +78,17 @@ export class PostService {
         }
       },
       {
+        $addFields: {
+          comments: {
+            $cond: {
+              if: { $eq: [{ $size: '$comments' }, 0] },
+              then: [],
+              else: '$comments'
+            }
+          }
+        }
+      },
+      {
         $project: {
           __v: 0,
           'user.__v': 0,
@@ -126,28 +137,79 @@ export class PostService {
 
 
   async getMyPosts(id: any): Promise<any> {
-    const aggregate: any = [
+    const aggregate: mongoose.PipelineStage[] = [
       {
         $match: {
           userId: id ? new mongoose.Types.ObjectId(id) : {$exists: true}
-        },
+        }
       },
       {
         $lookup: {
           from: 'users',
           localField: 'userId',
           foreignField: '_id',
-          as: 'user',
-        },
+          as: 'user'
+        }
+      },
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'postId',
+          as: 'comments'
+        }
+      },
+      {
+        $unwind: {
+          path: '$comments',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'comments.userId',
+          foreignField: '_id',
+          as: 'comments.user'
+        }
+      },
+      {
+        $unwind: {
+          path: '$comments.user',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          community: { $first: '$community' },
+          topic: { $first: '$topic' },
+          content: { $first: '$content' },
+          createdAt: { $first: '$createdAt' },
+          updatedAt: { $first: '$updatedAt' },
+          user: { $first: '$user' },
+          comments: { $push: { $mergeObjects: ['$comments', { user: '$comments.user' }] } }
+        }
+      },
+      {
+        $addFields: {
+          comments: {
+            $cond: {
+              if: { $eq: [{ $size: '$comments' }, 0] },
+              then: [],
+              else: '$comments'
+            }
+          }
+        }
       },
       {
         $project: {
           __v: 0,
           'user.__v': 0,
-          'userId': 0,
-        },
-      },
-    ]
+          'comments.__v': 0
+        }
+      }
+    ];
 
     const post = await this.postModel.aggregate(aggregate).exec()
 

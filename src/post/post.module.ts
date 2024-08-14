@@ -14,6 +14,6 @@ import { Comment, CommentSchema } from 'src/schema/comment.schema';
   ],
   controllers: [PostController],
   providers: [PostService],
-  exports: [PostService]  // Exporting PostService if it needs to be used in other modules
+  exports: [PostService] 
 })
 export class PostModule { }

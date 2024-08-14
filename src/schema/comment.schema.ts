@@ -17,5 +17,4 @@ export class Comment {
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
 
-// Indexing the fields for better query performance
 CommentSchema.index({ userId: 1, postId: 1 });

@@ -55,7 +55,7 @@ export class PostController {
     @Req() req: any,
   ): Promise<any> {
     try{
-      const userId = req.user.id; // Assuming `id` is stored in the JWT payload
+      const userId = req.user.id; 
       return this.postService.addComment(postId, userId, comment);
     } catch {
       return { message: 'success'};

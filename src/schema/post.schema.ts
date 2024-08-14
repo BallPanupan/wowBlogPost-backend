@@ -19,5 +19,4 @@ export class Post {
 
 export const PostSchema = SchemaFactory.createForClass(Post);
 
-// Optional: Indexing fields for better performance
 PostSchema.index({ userId: 1, community: 1 });
