@@ -64,5 +64,6 @@ mongorestore --uri="" --db=wowBlogPost /{path backup}
 
 ### 4. Start the project in development mode
 ```
+npm install
 npm run start:dev                                                
 ```
